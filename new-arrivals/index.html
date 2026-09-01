@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collection - Store</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <header id="navbar">
+    <div class="left">
+      <a href="../index.html" class="icon" style="text-decoration:none; font-size:14px; font-weight:bold; color:#000;">← BACK</a>
+    </div>
+    <div class="logo">
+      <h1>SNITCH</h1>
+    </div>
+    <div class="right">
+      <input type="text" placeholder="Search products...">
+    </div>
+  </header>
+
+  <div class="heading" style="margin-top: 30px;">Collection Items</div>
+
+  <section id="productsContainer" style="margin-top: 20px;">
+  </section>
+
+  <script>
+    // Cart storage utilities
+    function getCart() {
+      return JSON.parse(localStorage.getItem("cart")) || [];
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function addToCart(product) {
+      let cart = getCart();
+      let existingItem = cart.find(item => item.title === product.title && item.price === product.price);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+
+      saveCart(cart);
+      alert("has been added to your cart...");
+    }
+
+    const productsContainer = document.getElementById("productsContainer");
+    
+    function loadCategoryProducts() {
+      const sampleItems = [
+        { title: "BLINK Black Cabin Suitcase", price: "999", img: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/2_5f748b8b-fc10-4604-bec7-bf7142b6fde8.jpg?v=1785133602&quality=80" },
+        { title: "RUBIK Laptop Off White Suitcase", price: "1699", img: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/1_bd80a21d-ca85-4a89-ae55-910f685eb3af.jpg?v=1785321754&quality=80" },
+        { title: "Oversized Graphic Tee", price: "999", img: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/1_76caa4ac-c815-41e4-bd70-bf843b4b5aff.jpg?v=1785321699&quality=80"},
+        { title: "RUBIK Laptop Silver Suitcase", price: "1699", img: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/1_1e2b4efd-1eb3-4178-9895-279b903605c4.jpg?v=1785321835&quality=80" },
+        { title: "RUBIK Laptop Dark Grey Suitcase", price: "999", img: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/2_7b89c92e-ff52-41a1-aebb-a16bad4410de.png?v=1785135715&quality=80" },
+        { title: "VITTO Black Suitcase- Set of 3", price: "1699", img: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/2_de65a20b-662d-468b-aafc-3727835a19b3.png?v=1785135667&quality=80" },
+      ];
+
+      productsContainer.innerHTML = sampleItems.map((item, index) => `
+        <div class="productCard">
+          <div class="imgWrapper">
+            <img src="${item.img}" alt="${item.title}">
+          </div>
+          <div class="productTitle">${item.title}</div>
+          <div class="productPrice">${item.price}</div>
+          <button class="addToCartBtn" data-index="${index}" style="margin-top: 10px; padding: 10px; background: #000; color: #fff; border: none; cursor: pointer; font-size: 11px; font-weight: bold; letter-spacing: 1px;">ADD TO CART</button>
+        </div>
+      `).join('');
+
+      // Wire up each "Add to Cart" button dynamically
+      document.querySelectorAll(".addToCartBtn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const index = e.target.getAttribute("data-index");
+          addToCart(sampleItems[index]);
+        });
+      });
+    }
+
+    loadCategoryProducts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Bag - SNITCH</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        color: #000;
+      }
+
+      /* Navbar style match */
+      #navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        border-bottom: 1px solid #eee;
+      }
+      .logo h1 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 2px;
+      }
+
+      /* Main Cart Layout */
+      .cart-layout {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        padding: 40px 80px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Left side: Cart Items List */
+      #cartContainer {
+        flex: 1.5;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .cartItemCard {
+        display: flex;
+        gap: 20px;
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        position: relative;
+        background: #fff;
+      }
+
+      .cartItemCard img {
+        width: 110px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 2px;
+      }
+
+      .itemDetailsBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-grow: 1;
+      }
+
+      .itemTitle {
+        font-size: 14px;
+        font-weight: 500;
+        margin: 0 0 5px 0;
+      }
+
+      .itemMeta {
+        font-size: 12px;
+        color: #555;
+        margin-bottom: 15px;
+      }
+
+      .itemMeta select {
+        padding: 2px 5px;
+        font-size: 11px;
+        border: 1px solid #ccc;
+        background: #fff;
+        cursor: pointer;
+        margin-left: 5px;
+      }
+
+      .cardActions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+      }
+
+      .moveToWishlist {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 11px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        color: #000;
+      }
+
+      .itemPrice {
+        font-size: 13px;
+        font-weight: bold;
+      }
+
+      .deleteIconBtn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        color: #333;
+      }
+
+      /* Right side: Price Details & Checkout */
+      .cartSummaryBox {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .couponBox {
+        border: 1px solid #eee;
+        padding: 15px;
+        border-radius: 4px;
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .priceDetailsCard {
+        border: 1px solid #eee;
+        padding: 20px;
+        border-radius: 4px;
+      }
+
+      .priceDetailsTitle {
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+      }
+
+      .priceRow {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        margin-bottom: 12px;
+        color: #333;
+      }
+
+      .priceRow.total {
+        font-weight: bold;
+        color: #000;
+        border-top: 1px solid #eee;
+        padding-top: 12px;
+        margin-top: 15px;
+      }
+
+      .checkoutBtn {
+        width: 100%;
+        background: #000;
+        color: #fff;
+        border: none;
+        padding: 15px;
+        font-weight: bold;
+        font-size: 12px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .emptyCartMessage {
+        text-align: center;
+        padding: 50px;
+        font-size: 14px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TOP NAVBAR -->
+    <nav id="navbar">
+      <div class="left">
+        <a href="../index.html" class="menu" style="background: none; border: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center;">
+          <img src="../menu.png" alt="Menu" style="width: 20px" />
+        </a>
+      </div>
+      <div class="logo">
+        <a href="../index.html" style="text-decoration: none; color: inherit"
+          ><h1>SNITCH</h1></a
+        >
+      </div>
+      <div class="right" style="display: flex; gap: 15px; align-items: center">
+        <span style="font-size: 25px; cursor: pointer">♡</span>
+      </div>
+    </nav>
+
+    <!-- CART CONTAINER LAYOUT -->
+    <div class="cart-layout">
+      <!-- Left Column: Items List -->
+      <div id="cartContainer"></div>
+
+      <!-- Right Column: Summary & Checkout -->
+      <div class="cartSummaryBox">
+        <div class="couponBox">
+          <span>🏷️ Login to view Coupons and Gift Cards</span>
+          <span>></span>
+        </div>
+
+        <div class="priceDetailsCard">
+          <div class="priceDetailsTitle">PRICE DETAILS</div>
+          <div class="priceRow">
+            <span>Bag Total</span>
+            <span id="bagTotal">₹0</span>
+          </div>
+          <div class="priceRow">
+            <span>Coupon Discount</span>
+            <span>- ₹0</span>
+          </div>
+          <div class="priceRow total">
+            <span>Grand Total</span>
+            <span id="grandTotal">₹0</span>
+          </div>
+
+          <button class="checkoutBtn" id="checkoutBtn">
+            PLACE ORDER
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function loadCartPage() {
+        let cartContainer = document.getElementById("cartContainer");
+        let bagTotalElem = document.getElementById("bagTotal");
+        let grandTotalElem = document.getElementById("grandTotal");
+
+        cartContainer.innerHTML = "";
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        if (cart.length === 0) {
+          cartContainer.innerHTML = `<div class="emptyCartMessage">Your shopping bag is empty.</div>`;
+          bagTotalElem.innerText = "₹0";
+          grandTotalElem.innerText = "₹0";
+          return;
+        }
+
+        let bagTotal = 0;
+
+        cart.forEach(function (item, index) {
+          let itemPriceNum = Number(item.price) || 0;
+          let itemQty = Number(item.quantity) || 1;
+          bagTotal += itemPriceNum * itemQty;
+
+          let card = document.createElement("div");
+          card.setAttribute("class", "cartItemCard");
+
+          // Product Image
+          let img = document.createElement("img");
+          img.src = item.image;
+
+          // Details Wrapper
+          let detailsBox = document.createElement("div");
+          detailsBox.setAttribute("class", "itemDetailsBox");
+
+          // Top Info (Title & Meta)
+          let infoDiv = document.createElement("div");
+
+          let title = document.createElement("p");
+          title.setAttribute("class", "itemTitle");
+          title.innerText = item.title;
+
+          let meta = document.createElement("div");
+          meta.setAttribute("class", "itemMeta");
+
+          // Size & Quantity selectors matching image layout
+          let sizeText = item.size ? `${item.size} | ` : "";
+          meta.innerHTML = `${sizeText}QTY | `;
+
+          // Quantity dropdown
+          let qtySelect = document.createElement("select");
+          [1, 2, 3, 4, 5].forEach((num) => {
+            let opt = document.createElement("option");
+            opt.value = num;
+            opt.innerText = num;
+            if (num === itemQty) opt.selected = true;
+            qtySelect.append(opt);
+          });
+
+          qtySelect.addEventListener("change", function () {
+            cart[index].quantity = Number(this.value);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCartPage();
+          });
+
+          meta.append(qtySelect);
+          infoDiv.append(title, meta);
+
+          // Bottom Actions (Move to Wishlist & Price)
+          let actionsDiv = document.createElement("div");
+          actionsDiv.setAttribute("class", "cardActions");
+
+          let moveWishlistBtn = document.createElement("button");
+          moveWishlistBtn.setAttribute("class", "moveToWishlist");
+          moveWishlistBtn.innerText = "MOVE TO WISHLIST";
+          moveWishlistBtn.addEventListener("click", function () {
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCartPage();
+          });
+
+          let price = document.createElement("span");
+          price.setAttribute("class", "itemPrice");
+          price.innerText = "₹" + itemPriceNum * itemQty;
+
+          actionsDiv.append(moveWishlistBtn, price);
+          detailsBox.append(infoDiv, actionsDiv);
+
+          // Delete / Remove Icon Button (Top right of card)
+          let deleteBtn = document.createElement("button");
+          deleteBtn.setAttribute("class", "deleteIconBtn");
+          deleteBtn.style.background = "none";
+          deleteBtn.style.border = "none";
+          deleteBtn.style.cursor = "pointer";
+
+          let deleteImg = document.createElement("img");
+          deleteImg.src =
+            "https://www.shareicon.net/data/2015/12/18/689400_button_512x512.png";
+          deleteImg.style.width = "16px";
+          deleteImg.style.height = "16px";
+
+          deleteBtn.append(deleteImg);
+
+          deleteBtn.addEventListener("click", function () {
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCartPage();
+          });
+
+          card.append(img, detailsBox, deleteBtn);
+          cartContainer.append(card);
+        });
+
+        bagTotalElem.innerText = "₹" + bagTotal;
+        grandTotalElem.innerText = "₹" + bagTotal;
+      }
+
+      // Handle Order Placement / Checkout (Saves ordered items to orderedItems in localStorage)
+      document.getElementById("checkoutBtn").addEventListener("click", function () {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        if (cart.length === 0) {
+          alert("Your cart is empty!");
+          return;
+        }
+
+        // Retrieve existing orders or initialize a new array
+        let orders = JSON.parse(localStorage.getItem("orderedItems")) || [];
+        
+        // Add current cart items to orders history with a timestamp
+        let newOrder = {
+          date: new Date().toLocaleString(),
+          items: cart
+        };
+        orders.push(newOrder);
+
+        // Save back to localStorage
+        localStorage.setItem("orderedItems", JSON.stringify(orders));
+
+        alert("Order Placed Successfully!");
+        localStorage.removeItem("cart"); // Clear the cart data
+        loadCartPage(); // Refresh page to display empty state
+      });
+
+      // Initialize page load
+      loadCartPage();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collection - Store</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <header id="navbar">
+    <div class="left">
+      <a href="../index.html" class="icon" style="text-decoration:none; font-size:14px; font-weight:bold; color:#000;">← BACK</a>
+    </div>
+    <div class="logo">
+      <h1>SNITCH</h1>
+    </div>
+    <div class="right">
+      <input type="text" placeholder="Search products...">
+    </div>
+  </header>
+
+  <div class="heading" style="margin-top: 30px;">Collection Items</div>
+
+  <section id="productsContainer" style="margin-top: 20px;">
+  </section>
+
+  <script>
+    // Cart management utilities
+    function getCart() {
+      return JSON.parse(localStorage.getItem("cart")) || [];
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function addToCart(product) {
+      let cart = getCart();
+      let existingItem = cart.find(item => item.title === product.title && item.price === product.price);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+
+      saveCart(cart);
+      alert("has been added to cart...");
+    }
+
+    const productsContainer = document.getElementById("productsContainer");
+    
+    function loadCategoryProducts() {
+      const sampleItems = [
+        { title: "Oversized Graphic Tee", price: "999", img: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/ce2c997ea9273310240f09b985063218.jpg?v=1731388480&quality=80" },
+        { title: "Relaxed Fit Trouser", price: "1699", img: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/f56b2f7b64695c54cac131cd598e16bb.webp?v=1723438767&quality=80" },
+        { title: "Relaxed Fit Trouser", price: "1299", img: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/a868afaa9d7394e644f7ba1bf44bff2d.jpg?v=1755866135&quality=80" },
+        { title: "Relaxed Fit Trouser", price: "1399", img: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/9ea27ebcb36303e484283811c6009db2.jpg?v=1729520338&quality=80" },
+      ];
+
+      productsContainer.innerHTML = sampleItems.map((item, index) => `
+        <div class="productCard">
+          <div class="imgWrapper">
+            <img src="${item.img}" alt="${item.title}">
+          </div>
+          <div class="productTitle">${item.title}</div>
+          <div class="productPrice">${item.price}</div>
+          <button class="addToCartBtn" data-index="${index}" style="margin-top: 10px; padding: 10px; background: #000; color: #fff; border: none; cursor: pointer; font-size: 11px; font-weight: bold; letter-spacing: 1px;">ADD TO CART</button>
+        </div>
+      `).join('');
+
+      // Attach event listeners to all generated Add to Cart buttons
+      document.querySelectorAll(".addToCartBtn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const index = e.target.getAttribute("data-index");
+          addToCart(sampleItems[index]);
+        });
+      });
+    }
+    
+
+    loadCategoryProducts();
+  </script>
+</body>
+</html>
+
